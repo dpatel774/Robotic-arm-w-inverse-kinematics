@@ -28,7 +28,7 @@ This project is a 3-degree-of-freedom robotic arm controlled in real time via mo
 | PWM driver | PCA9685, 16-channel, I2C address `0x40` |
 | Servos | 3x MG995 (base, shoulder, elbow) |
 | Claw (v2) | SG90, reserved on channel 3 |
-| Structure | 3D-printed (SolidWorks CAD), printed via CAEN facilities |
+| Structure | 3D-printed (SolidWorks CAD) |
 
 Full bill of materials: [`Robot Arm BOM.xlsx`](./Robot%20Arm%20BOM.xlsx)
 
@@ -79,9 +79,6 @@ See [`kinematics.py`](./kinematics.py) for the full implementation and inline de
 - [x] Full control loop working end-to-end (Python → serial → Arduino → PCA9685 → servos)
 - [x] Shoulder inversion and elbow-up configuration resolved
 - [ ] Servo pulse range (`SERVO_MIN`/`SERVO_MAX`) calibration to actual MG995 spec
-- [ ] Elbow mount redesign (single continuous body, matching shoulder approach)
-- [ ] Final link prints
-- [ ] Demo video
 - [ ] FEA: static stress analysis on highest-load part under ~2 kg payload
 - [ ] v2: SG90 claw integration (channel 3, already wired)
 
