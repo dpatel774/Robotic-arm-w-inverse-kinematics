@@ -362,6 +362,11 @@
       </tbody>
     </table>
     <p class="body-text muted" style="margin-top:18px; font-size:13.5px;">Full itemized BOM: <a href="./Robot%20Arm%20BOM.xlsx">Robot Arm BOM.xlsx</a></p>
+
+    <div style="margin-top:32px;">
+      <img src="./wiring-diagram.png" alt="Wiring diagram: Arduino Uno to PCA9685 to three MG995 servos" style="width:100%; border:1px solid var(--line); display:block;">
+      <p class="body-text muted" style="margin-top:14px; font-size:13.5px;">The Uno talks to the PCA9685 over I2C — SDA/SCL run from the analog header (A4/A5) to the driver's SDA/SCL pins, with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail is fed from its own DC barrel jack rather than the Uno's 5V line, so servo stall current can't brown out the microcontroller. Each MG995 plugs into its own channel (signal, V+, GND) on the driver — base, shoulder, and elbow on channels 0–2, with channel 3 reserved for the v2 claw.</p>
+    </div>
   </section>
 
   <section id="decisions">
