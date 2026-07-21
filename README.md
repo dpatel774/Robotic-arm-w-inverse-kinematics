@@ -79,9 +79,6 @@ See [`kinematics.py`](./kinematics.py) for the full implementation and inline de
 - [x] Full control loop working end-to-end (Python → serial → Arduino → PCA9685 → servos)
 - [x] Shoulder inversion and elbow-up configuration resolved
 - [ ] Servo pulse range (`SERVO_MIN`/`SERVO_MAX`) calibration to actual MG995 spec
-- [ ] Elbow mount redesign (single continuous body, matching shoulder approach)
-- [ ] Final link prints
-- [ ] Demo video
 - [ ] FEA: static stress analysis on highest-load part under ~2 kg payload
 - [ ] v2: SG90 claw integration (channel 3, already wired)
 
