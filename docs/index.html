@@ -1,11 +1,405 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>3-DOF Robotic Arm</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3-DOF Desktop Robotic Arm — Dilan Patel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #F7F7F3;
+    --paper-2: #EFEFE9;
+    --ink: #1B1D1B;
+    --muted: #6B6F6B;
+    --grid: #DADAD3;
+    --redline: #C1440E;
+    --blueprint: #2B4C6F;
+    --line: #C7C9C2;
+    --radius: 2px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.55;
+  }
+
+  .mono{ font-family: 'IBM Plex Mono', monospace; }
+
+  a{ color: var(--blueprint); }
+
+  ::selection{ background: var(--redline); color: #fff; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+
+  /* ---------- layout shell ---------- */
+  .sheet{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  header.titleblock{
+    border-bottom: 2px solid var(--ink);
+    padding: 18px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+  header.titleblock .doc-id{ color: var(--redline); }
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding: 64px 0 40px;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 800px){
+    .hero{ grid-template-columns: 1fr; padding-top: 40px; }
+  }
+
+  h1{
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin: 0 0 18px;
+  }
+  h1 span{ color: var(--redline); }
+
+  .lede{
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 46ch;
+    margin: 0 0 26px;
+  }
+
+  .cta-row{ display:flex; gap: 14px; flex-wrap: wrap; }
+  .btn{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    padding: 10px 16px;
+    border: 1.5px solid var(--ink);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .btn:hover{ background: var(--ink); color: var(--paper); }
+  .btn.primary{ background: var(--redline); border-color: var(--redline); color: #fff; }
+  .btn.primary:hover{ background: #9c360a; border-color: #9c360a; }
+
+  /* ---------- kinematic diagram (signature element) ---------- */
+  .diagram-wrap{
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    position: relative;
+    box-shadow: 0 1px 0 var(--line);
+  }
+  .diagram-label{
+    position: absolute;
+    top: 10px; left: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+  }
+  svg.kinematic{ width: 100%; height: auto; display: block; }
+
+  .arm-upper{ transform-origin: 150px 330px; animation: sweepUpper 6s ease-in-out infinite; }
+  .arm-fore{ transform-origin: 250px 330px; animation: sweepFore 6s ease-in-out infinite; }
+
+  @keyframes sweepUpper{
+    0%   { transform: rotate(0deg); }
+    50%  { transform: rotate(-42deg); }
+    100% { transform: rotate(0deg); }
+  }
+  @keyframes sweepFore{
+    0%   { transform: rotate(0deg); }
+    50%  { transform: rotate(-65deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  .dim-text{ font-family: 'IBM Plex Mono', monospace; font-size: 11px; fill: var(--blueprint); }
+  .dim-line{ stroke: var(--blueprint); stroke-width: 1; }
+  .envelope{ stroke: var(--line); stroke-dasharray: 3 3; fill: none; }
+  .link{ stroke: var(--ink); stroke-width: 6; stroke-linecap: round; }
+  .joint{ fill: var(--paper); stroke: var(--ink); stroke-width: 2; }
+  .joint.end{ fill: var(--redline); stroke: var(--redline); }
+
+  /* ---------- section scaffolding ---------- */
+  section{ padding: 56px 0; border-top: 1px solid var(--grid); }
+  .eyebrow{
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--redline);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h2{
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 26px;
+    margin: 0 0 20px;
+  }
+  p.body-text{ max-width: 64ch; color: var(--ink); }
+  p.body-text.muted{ color: var(--muted); }
+
+  /* ---------- pipeline diagram ---------- */
+  .pipeline{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin-top: 28px;
+    align-items: stretch;
+  }
+  @media (max-width: 800px){ .pipeline{ grid-template-columns: 1fr; } }
+  .stage{
+    border: 1px solid var(--line);
+    background: #fff;
+    padding: 16px 14px;
+    position: relative;
+  }
+  .stage + .stage{ border-left: none; }
+  @media (max-width: 800px){ .stage + .stage{ border-left: 1px solid var(--line); border-top: none; } }
+  .stage .tag{ font-family:'IBM Plex Mono',monospace; font-size: 10px; color: var(--muted); letter-spacing:0.06em; }
+  .stage .name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size: 15px; margin: 6px 0 4px; }
+  .stage .desc{ font-size: 12.5px; color: var(--muted); }
+  .arrow{
+    display:none;
+  }
+  @media (min-width:801px){
+    .stage:not(:last-child)::after{
+      content: "→";
+      position: absolute;
+      right: -11px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--redline);
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--paper);
+      z-index: 2;
+      font-size: 14px;
+    }
+  }
+
+  /* ---------- hardware table ---------- */
+  table{ width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14.5px; }
+  th{
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--ink);
+    padding: 8px 10px;
+  }
+  td{ padding: 12px 10px; border-bottom: 1px solid var(--grid); }
+  td.mono{ color: var(--blueprint); }
+
+  /* ---------- decisions ---------- */
+  .decisions{ display:grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 26px; }
+  @media (max-width: 800px){ .decisions{ grid-template-columns: 1fr; } }
+  .card{
+    background:#fff; border:1px solid var(--line); padding: 18px;
+    border-top: 3px solid var(--redline);
+  }
+  .card h3{ font-family:'Space Grotesk',sans-serif; font-size:15.5px; margin: 0 0 8px; }
+  .card p{ font-size: 13.5px; color: var(--muted); margin:0; }
+
+  /* ---------- roadmap ---------- */
+  .checklist{ list-style:none; margin: 22px 0 0; padding:0; max-width: 60ch; }
+  .checklist li{
+    display:flex; gap:12px; align-items:flex-start;
+    padding: 9px 0; border-bottom: 1px dashed var(--grid);
+    font-size: 14.5px;
+  }
+  .checklist .box{
+    width: 15px; height: 15px; margin-top:2px; flex:none;
+    border: 1.5px solid var(--ink); border-radius: 2px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace; font-size: 11px; color: var(--redline);
+  }
+  .checklist li.done .box::after{ content:"✓"; }
+  .checklist li.done span.t{ color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line); }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top: 2px solid var(--ink);
+    padding: 26px 0 40px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12.5px;
+    color: var(--muted);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  }
+  footer a{ color: var(--ink); }
+</style>
 </head>
 <body>
-  <h1>3-DOF Desktop Robotic Arm</h1>
-  <p>Portfolio page coming soon — content in progress.</p>
+
+<div class="sheet">
+  <header class="titleblock">
+    <span>3-DOF DESKTOP ROBOTIC ARM</span>
+    <span>UNIVERSITY OF MICHIGAN</span>
+  </header>
+
+  <section class="hero" style="border-top:none;">
+    <div>
+      <h1>3-DOF Desktop<br>Robotic <span>Arm</span></h1>
+      <p class="lede">Designed and built end to end: CAD, 3D-printed structure, custom inverse kinematics, and real-time servo control. A complete demonstration of the design-to-build cycle.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://github.com/dpatel774/Robotic-arm-w-inverse-kinematics" target="_blank" rel="noopener">View source</a>
+        <a class="btn" href="#architecture">Technical overview</a>
+      </div>
+    </div>
+
+    <div class="diagram-wrap">
+      <span class="diagram-label">FIG. 1 — WORKING ENVELOPE, LIVE</span>
+      <svg class="kinematic" viewBox="0 0 460 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- reach envelope -->
+        <circle class="envelope" cx="150" cy="330" r="220"></circle>
+        <circle class="envelope" cx="150" cy="330" r="20"></circle>
+
+        <!-- base -->
+        <rect x="130" y="330" width="40" height="14" fill="#1B1D1B"></rect>
+
+        <g class="arm-upper">
+          <line class="link" x1="150" y1="330" x2="250" y2="330"></line>
+          <circle class="joint" cx="150" cy="330" r="7"></circle>
+
+          <g class="arm-fore">
+            <line class="link" x1="250" y1="330" x2="370" y2="330"></line>
+            <circle class="joint" cx="250" cy="330" r="6"></circle>
+            <circle class="joint end" cx="370" cy="330" r="6"></circle>
+          </g>
+        </g>
+
+        <!-- dimension: L1 -->
+        <line class="dim-line" x1="150" y1="360" x2="250" y2="360"></line>
+        <text class="dim-text" x="172" y="376">L1 · 10 cm</text>
+
+        <!-- dimension: L2 -->
+        <line class="dim-line" x1="250" y1="60" x2="370" y2="60"></line>
+        <text class="dim-text" x="278" y="50">L2 · 12 cm</text>
+
+        <!-- envelope label -->
+        <text class="dim-text" x="240" y="120">REACH 2–22 cm</text>
+      </svg>
+    </div>
+  </section>
+
+  <section id="overview">
+    <p class="eyebrow">01 — Overview</p>
+    <h2>What this is</h2>
+    <p class="body-text">This project takes a robotic arm through the full design-to-build cycle: mechanical geometry locked in CAD, structure 3D-printed, inverse kinematics derived and coded from scratch, and a full control pipeline built layer by layer from a mouse cursor down to three physical servos. It's built as a demonstration of end-to-end product development — mechanical, electrical, and software — not just a coding exercise.</p>
+  </section>
+
+  <section id="architecture">
+    <p class="eyebrow">02 — Control Pipeline</p>
+    <h2>Control pipeline</h2>
+    <p class="body-text muted">Five stages, each with a single responsibility. Hardware issues are fixed in firmware; math issues are fixed in the kinematics layer. Neither leaks into the other.</p>
+
+    <div class="pipeline">
+      <div class="stage">
+        <div class="tag">INPUT</div>
+        <div class="name">Mouse + scroll</div>
+        <div class="desc">Cursor position → reach/height (cm). Scroll wheel → base angle accumulator.</div>
+      </div>
+      <div class="stage">
+        <div class="tag">kinematics.py</div>
+        <div class="name">Solve IK</div>
+        <div class="desc">Law-of-cosines 2-link solve → shoulder/elbow servo angles. No hardware, no UI — pure geometry.</div>
+      </div>
+      <div class="stage">
+        <div class="tag">arm_serial.py</div>
+        <div class="name">Transport</div>
+        <div class="desc">Handshakes on boot, throttles sends, ships "base,shoulder,elbow\n" @ 115200 baud.</div>
+      </div>
+      <div class="stage">
+        <div class="tag">arm_controller.ino</div>
+        <div class="name">Translate</div>
+        <div class="desc">Pure hardware relay — parses angles, drives the PCA9685. No math lives here.</div>
+      </div>
+      <div class="stage">
+        <div class="tag">OUTPUT</div>
+        <div class="name">3× MG995</div>
+        <div class="desc">Base, shoulder, elbow servos move to commanded angle in real time.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hardware">
+    <p class="eyebrow">03 — Bill of Materials</p>
+    <h2>Hardware</h2>
+    <table>
+      <thead>
+        <tr><th>Component</th><th>Spec</th><th>Role</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Microcontroller</td><td class="mono">ELEGOO Uno R3 (CH340)</td><td>Runs the firmware relay</td></tr>
+        <tr><td>PWM driver</td><td class="mono">PCA9685 · I2C 0x40</td><td>16-channel servo control</td></tr>
+        <tr><td>Servos</td><td class="mono">3× MG995</td><td>Base, shoulder, elbow</td></tr>
+        <tr><td>Structure</td><td class="mono">SolidWorks CAD, PLA</td><td>Printed via CAEN facilities</td></tr>
+      </tbody>
+    </table>
+    <p class="body-text muted" style="margin-top:18px; font-size:13.5px;">Full itemized BOM: <a href="./Robot%20Arm%20BOM.xlsx">Robot Arm BOM.xlsx</a></p>
+  </section>
+
+  <section id="decisions">
+    <p class="eyebrow">04 — Engineering Decisions</p>
+    <h2>Design decisions</h2>
+    <div class="decisions">
+      <div class="card">
+        <h3>Fix at the right layer</h3>
+        <p>A physical servo inversion was corrected in firmware with a per-channel flip — not by adjusting the IK math, which would have quietly broken every other channel.</p>
+      </div>
+      <div class="card">
+        <h3>Open-loop by design</h3>
+        <p>No position feedback sensors. Joint offsets are static calibration constants tuned against known physical positions — not a control-theory problem, a measurement one.</p>
+      </div>
+      <div class="card">
+        <h3>Coupon-first printing</h3>
+        <p>Printing costs per gram at CAEN. Critical fit features get validated on small test coupons before committing filament to a full-link reprint.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="status">
+    <p class="eyebrow">05 — Status</p>
+    <h2>Project status</h2>
+    <ul class="checklist">
+      <li class="done"><span class="box"></span><span class="t">Full control loop working — mouse → serial → Arduino → PCA9685 → servos</span></li>
+      <li class="done"><span class="box"></span><span class="t">Shoulder inversion + elbow-up configuration resolved</span></li>
+      <li><span class="box"></span><span class="t">Calibrate SERVO_MIN / SERVO_MAX to actual MG995 pulse range</span></li>
+      <li><span class="box"></span><span class="t">Record demo video</span></li>
+      <li><span class="box"></span><span class="t">FEA: static stress study under ~2 kg payload</span></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Dilan Patel · University of Michigan</span>
+    <span><a href="https://github.com/dpatel774/Robotic-arm-w-inverse-kinematics" target="_blank" rel="noopener">github.com/dpatel774/Robotic-arm-w-inverse-kinematics</a></span>
+  </footer>
+</div>
+
 </body>
 </html>
