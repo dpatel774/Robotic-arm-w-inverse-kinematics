@@ -28,7 +28,7 @@ This project is a 3-degree-of-freedom robotic arm controlled in real time via mo
 | PWM driver | PCA9685, 16-channel, I2C address `0x40` |
 | Servos | 3x MG995 (base, shoulder, elbow) |
 | Claw (v2) | SG90, reserved on channel 3 |
-| Structure | 3D-printed (SolidWorks CAD), printed via CAEN facilities |
+| Structure | 3D-printed (SolidWorks CAD) |
 
 Full bill of materials: [`Robot Arm BOM.xlsx`](./Robot%20Arm%20BOM.xlsx)
 
