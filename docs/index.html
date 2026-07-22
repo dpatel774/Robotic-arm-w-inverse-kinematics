@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3-DOF Desktop Robotic Arm — Dilan Patel</title>
+<title>3-DOF Desktop Robotic Arm · Dilan Patel</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -181,9 +181,9 @@
   }
   .stage + .stage{ border-left: none; }
   @media (max-width: 800px){ .stage + .stage{ border-left: 1px solid var(--line); border-top: none; } }
-  .stage .tag{ font-family:'IBM Plex Mono',monospace; font-size: 10px; color: var(--muted); letter-spacing:0.06em; }
-  .stage .name{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size: 15px; margin: 6px 0 4px; }
-  .stage .desc{ font-size: 12.5px; color: var(--muted); }
+  .stage .tag{ font-family:'Space Grotesk',sans-serif; font-weight:600; font-size: 14px; line-height: 1.35; color: var(--ink); margin-bottom: 8px; }
+  .stage .tag .file{ font-family:'IBM Plex Mono',monospace; font-weight:400; font-size: 11px; color: var(--muted); display:block; margin-bottom: 3px; letter-spacing:0.01em; }
+  .stage .desc{ font-size: 12.5px; color: var(--muted); line-height: 1.45; }
   .arrow{
     display:none;
   }
@@ -219,6 +219,30 @@
   /* ---------- decisions ---------- */
   .decisions{ display:grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-top: 26px; }
   @media (max-width: 800px){ .decisions{ grid-template-columns: 1fr; } }
+
+  .calc-panel{
+    margin-top: 26px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blueprint);
+    padding: 22px 24px;
+  }
+  .calc-header h3{ font-family:'Space Grotesk',sans-serif; font-size:15.5px; margin:0 0 8px; }
+  .calc-header p{ font-size: 13.5px; color: var(--muted); margin: 0 0 16px; max-width: 60ch; }
+  .calc-math{ font-size: 13px; border-top: 1px dashed var(--grid); padding-top: 14px; }
+  .calc-row{
+    display:flex; justify-content:space-between; gap: 20px;
+    padding: 5px 0;
+    flex-wrap: wrap;
+  }
+  .calc-row .calc-label{ color: var(--muted); flex: none; min-width: 120px; }
+  .calc-row.result{
+    margin-top: 6px; padding-top: 10px;
+    border-top: 1px solid var(--ink);
+    font-weight: 500;
+  }
+  .calc-row.result .calc-label{ color: var(--ink); }
+  .calc-row.result span:last-child{ color: var(--redline); font-weight: 600; }
   .card{
     background:#fff; border:1px solid var(--line); padding: 18px;
     border-top: 3px solid var(--redline);
@@ -273,7 +297,7 @@
     </div>
 
     <div class="diagram-wrap">
-      <span class="diagram-label">FIG. 1 — WORKING ENVELOPE, LIVE</span>
+      <span class="diagram-label">FIG. 1 · WORKING ENVELOPE, LIVE</span>
       <svg class="kinematic" viewBox="0 0 460 400" xmlns="http://www.w3.org/2000/svg">
         <!-- reach envelope -->
         <circle class="envelope" cx="150" cy="330" r="220"></circle>
@@ -308,47 +332,42 @@
   </section>
 
   <section id="overview">
-    <p class="eyebrow">01 — Overview</p>
-    <h2>What this is</h2>
-    <p class="body-text">This project takes a robotic arm through the full design-to-build cycle: mechanical geometry locked in CAD, structure 3D-printed, inverse kinematics derived and coded from scratch, and a full control pipeline built layer by layer from a mouse cursor down to three physical servos. It's built as a demonstration of end-to-end product development — mechanical, electrical, and software — not just a coding exercise.</p>
+    <p class="eyebrow">01 · Overview</p>
+    <h2>Overview</h2>
+    <p class="body-text">This project takes a robotic arm through the full design-to-build cycle: mechanical geometry locked in CAD, a 3D-printed structure, inverse kinematics derived and coded from scratch, and a full control pipeline built layer by layer from a mouse cursor down to three physical servos. The work spans mechanical design, electrical integration, and software, from initial concept through a working, demoed system.</p>
   </section>
 
   <section id="architecture">
-    <p class="eyebrow">02 — Control Pipeline</p>
+    <p class="eyebrow">02 · Control Pipeline</p>
     <h2>Control pipeline</h2>
     <p class="body-text muted">Five stages, each with a single responsibility. Hardware issues are fixed in firmware; math issues are fixed in the kinematics layer. Neither leaks into the other.</p>
 
     <div class="pipeline">
       <div class="stage">
-        <div class="tag">INPUT</div>
-        <div class="name">Mouse + scroll</div>
-        <div class="desc">Cursor position → reach/height (cm). Scroll wheel → base angle accumulator.</div>
+        <div class="tag">Input</div>
+        <div class="desc">Mouse position sets reach/height (cm). Scroll wheel sets base angle.</div>
       </div>
       <div class="stage">
-        <div class="tag">kinematics.py</div>
-        <div class="name">Solve IK</div>
-        <div class="desc">Law-of-cosines 2-link solve → shoulder/elbow servo angles. No hardware, no UI — pure geometry.</div>
+        <div class="tag"><span class="file">kinematics.py</span>Solve IK</div>
+        <div class="desc">Law-of-cosines 2-link solve, converts target position into shoulder/elbow servo angles.</div>
       </div>
       <div class="stage">
-        <div class="tag">arm_serial.py</div>
-        <div class="name">Transport</div>
-        <div class="desc">Handshakes on boot, throttles sends, ships "base,shoulder,elbow\n" @ 115200 baud.</div>
+        <div class="tag"><span class="file">arm_serial.py</span>Transport</div>
+        <div class="desc">Outputs angles to the serial monitor and the Arduino over USB.</div>
       </div>
       <div class="stage">
-        <div class="tag">arm_controller.ino</div>
-        <div class="name">Translate</div>
-        <div class="desc">Pure hardware relay — parses angles, drives the PCA9685. No math lives here.</div>
+        <div class="tag"><span class="file">arm_controller.ino</span>Translate</div>
+        <div class="desc">Parses incoming angles and drives the PCA9685 accordingly.</div>
       </div>
       <div class="stage">
-        <div class="tag">OUTPUT</div>
-        <div class="name">3× MG995</div>
-        <div class="desc">Base, shoulder, elbow servos move to commanded angle in real time.</div>
+        <div class="tag">Output</div>
+        <div class="desc">Base, shoulder, and elbow servos move to the commanded angle.</div>
       </div>
     </div>
   </section>
 
   <section id="hardware">
-    <p class="eyebrow">03 — Bill of Materials</p>
+    <p class="eyebrow">03 · Bill of Materials</p>
     <h2>Hardware</h2>
     <table>
       <thead>
@@ -358,46 +377,35 @@
         <tr><td>Microcontroller</td><td class="mono">ELEGOO Uno R3 (CH340)</td><td>Runs the firmware relay</td></tr>
         <tr><td>PWM driver</td><td class="mono">PCA9685 · I2C 0x40</td><td>16-channel servo control</td></tr>
         <tr><td>Servos</td><td class="mono">3× MG995</td><td>Base, shoulder, elbow</td></tr>
-        <tr><td>Structure</td><td class="mono">SolidWorks CAD, PLA</td><td>Printed via CAEN facilities</td></tr>
+        <tr><td>Structure</td><td class="mono">SolidWorks CAD, PLA</td><td>3D printed</td></tr>
       </tbody>
     </table>
     <p class="body-text muted" style="margin-top:18px; font-size:13.5px;">Full itemized BOM: <a href="./Robot%20Arm%20BOM.xlsx">Robot Arm BOM.xlsx</a></p>
 
     <div style="margin-top:32px;">
-      <img src="./wiring-diagram.png" alt="Wiring diagram: Arduino Uno to PCA9685 to three MG995 servos" style="width:100%; border:1px solid var(--line); display:block;">
-      <p class="body-text muted" style="margin-top:14px; font-size:13.5px;">The Uno talks to the PCA9685 over I2C — SDA/SCL run from the analog header (A4/A5) to the driver's SDA/SCL pins, with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail is fed from its own DC barrel jack rather than the Uno's 5V line, so servo stall current can't brown out the microcontroller. Each MG995 plugs into its own channel (signal, V+, GND) on the driver — base, shoulder, and elbow on channels 0–2, with channel 3 reserved for the v2 claw.</p>
+      <img src="./wiring-diagram.png" alt="Wiring diagram: Arduino Uno to PCA9685 to three MG995 servos" style="width:100%; max-width:480px; margin:0 auto; border:1px solid var(--line); display:block;">
+      <p class="body-text muted" style="margin-top:14px; font-size:13.5px;">The Uno communicates with the PCA9685 over I2C, using the A4/A5 pins for SDA/SCL along with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail runs off its own DC barrel jack instead of the Uno's 5V line, so servo current draw can't brown out the microcontroller. Each MG995 plugs into its own channel on the driver (signal, V+, GND), with base, shoulder, and elbow on channels 0 to 2, and channel 3 reserved for the v2 claw.</p>
     </div>
   </section>
 
   <section id="decisions">
-    <p class="eyebrow">04 — Engineering Decisions</p>
+    <p class="eyebrow">04 · Engineering Decisions</p>
     <h2>Design decisions</h2>
-    <div class="decisions">
-      <div class="card">
-        <h3>Fix at the right layer</h3>
-        <p>A physical servo inversion was corrected in firmware with a per-channel flip — not by adjusting the IK math, which would have quietly broken every other channel.</p>
+
+    <div class="calc-panel">
+      <div class="calc-header">
+        <h3>Sizing the geometry: desk-scale reach + torque check</h3>
+        <p>Link lengths (10 cm / 12 cm, 2 to 22 cm reach) were set by a desk-scale reach requirement first, then checked against shoulder servo torque before the geometry was locked in CAD.</p>
       </div>
-      <div class="card">
-        <h3>Open-loop by design</h3>
-        <p>No position feedback sensors. Joint offsets are static calibration constants tuned against known physical positions — not a control-theory problem, a measurement one.</p>
-      </div>
-      <div class="card">
-        <h3>Coupon-first printing</h3>
-        <p>Printing costs per gram at CAEN. Critical fit features get validated on small test coupons before committing filament to a full-link reprint.</p>
+      <div class="calc-math mono">
+        <div class="calc-row"><span>τ = m · g · r</span></div>
+        <div class="calc-row"><span class="calc-label">Worst case</span><span>fully extended, payload + forearm + elbow servo mass at 22 cm reach</span></div>
+        <div class="calc-row"><span class="calc-label">m (est.)</span><span>≈ 0.18 kg</span></div>
+        <div class="calc-row"><span class="calc-label">τ required</span><span>0.18 × 9.81 × 0.22 ≈ 0.39 N·m ≈ 4.0 kgf·cm</span></div>
+        <div class="calc-row"><span class="calc-label">τ rated</span><span>MG995 stall torque ≈ 10 kgf·cm @ 4.8V</span></div>
+        <div class="calc-row result"><span class="calc-label">Safety factor</span><span>≈ 2.5×</span></div>
       </div>
     </div>
-  </section>
-
-  <section id="status">
-    <p class="eyebrow">05 — Status</p>
-    <h2>Project status</h2>
-    <ul class="checklist">
-      <li class="done"><span class="box"></span><span class="t">Full control loop working — mouse → serial → Arduino → PCA9685 → servos</span></li>
-      <li class="done"><span class="box"></span><span class="t">Shoulder inversion + elbow-up configuration resolved</span></li>
-      <li><span class="box"></span><span class="t">Calibrate SERVO_MIN / SERVO_MAX to actual MG995 pulse range</span></li>
-      <li><span class="box"></span><span class="t">Record demo video</span></li>
-      <li><span class="box"></span><span class="t">FEA: static stress study under ~2 kg payload</span></li>
-    </ul>
   </section>
 
   <footer>
