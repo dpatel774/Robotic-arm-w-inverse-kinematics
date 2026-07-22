@@ -112,16 +112,24 @@
     background: #fff;
     border: 1px solid var(--line);
     border-radius: var(--radius);
-    position: relative;
     box-shadow: 0 1px 0 var(--line);
   }
-  .diagram-label{
-    position: absolute;
-    top: 10px; left: 12px;
+  .caption{
+    text-align: center;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     letter-spacing: 0.06em;
+    padding: 10px 12px;
+    border-top: 1px solid var(--grid);
+  }
+  .figure-heading{
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    margin: 0 0 10px;
   }
   svg.kinematic{ width: 100%; height: auto; display: block; }
 
@@ -297,8 +305,8 @@
     </div>
 
     <div class="diagram-wrap">
-      <span class="diagram-label">FIG. 1 · WORKING PYGAME PREVIEW</span>
       <img src="./arm-preview.gif" alt="Working preview of the arm control loop, mouse-driven inverse kinematics" style="width:100%; height:auto; display:block;">
+      <p class="caption">Fig. 1 · Working Pygame preview</p>
     </div>
   </section>
 
@@ -353,10 +361,12 @@
     </table>
     <p class="body-text muted" style="margin-top:18px; font-size:13.5px;">Full itemized BOM: <a href="./Robot%20Arm%20BOM.xlsx">Robot Arm BOM.xlsx</a></p>
 
-    <div style="margin-top:32px;">
-      <img src="./wiring-diagram.png" alt="Wiring diagram: Arduino Uno to PCA9685 to three MG995 servos" style="width:100%; max-width:480px; margin:0 auto; border:1px solid var(--line); display:block;">
-      <p class="body-text muted" style="margin-top:14px; font-size:13.5px;">The Uno communicates with the PCA9685 over I2C, using the A4/A5 pins for SDA/SCL along with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail runs off its own DC barrel jack instead of the Uno's 5V line, so servo current draw can't brown out the microcontroller. Each MG995 plugs into its own channel on the driver (signal, V+, GND), with base, shoulder, and elbow on channels 0 to 2, and channel 3 reserved for the v2 claw.</p>
+    <div class="diagram-wrap" style="margin-top:32px; max-width:480px;">
+      <p class="figure-heading" style="padding:14px 14px 0;">Wiring Diagram</p>
+      <img src="./wiring-diagram.png" alt="Wiring diagram: Arduino Uno to PCA9685 to three MG995 servos" style="width:100%; display:block; padding:10px 14px 0;">
+      <p class="caption">Fig. 2 · Arduino to PCA9685 to servos</p>
     </div>
+    <p class="body-text muted" style="margin-top:16px; font-size:13.5px;">The Uno communicates with the PCA9685 over I2C, using the A4/A5 pins for SDA/SCL along with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail runs off its own DC barrel jack instead of the Uno's 5V line, so servo current draw can't brown out the microcontroller. Each MG995 plugs into its own channel on the driver (signal, V+, GND), with base, shoulder, and elbow on channels 0 to 2, and channel 3 reserved for the v2 claw.</p>
   </section>
 
   <section id="decisions">
