@@ -369,8 +369,20 @@
     <p class="body-text muted" style="margin-top:16px; font-size:13.5px;">The Uno communicates with the PCA9685 over I2C, using the A4/A5 pins for SDA/SCL along with a shared GND and 5V logic supply. Servo power is kept separate: the PCA9685's V+ rail runs off its own DC barrel jack instead of the Uno's 5V line, so servo current draw can't brown out the microcontroller. Each MG995 plugs into its own channel on the driver (signal, V+, GND), with base, shoulder, and elbow on channels 0 to 2, and channel 3 reserved for the v2 claw.</p>
   </section>
 
+  <section id="mechanical">
+    <p class="eyebrow">04 · Mechanical Design</p>
+    <h2>CAD</h2>
+    <p class="body-text muted">Modeled in SolidWorks. The base rotates on the bottom servo, with the shoulder and elbow mounts built as single continuous bodies, keeping the joint stiff.</p>
+
+    <div class="diagram-wrap" style="margin-top:22px; max-width:480px;">
+      <p class="figure-heading" style="padding:14px 14px 0;">Full Assembly</p>
+      <img src="./cad-render.png" alt="CAD render of the 3-DOF robotic arm assembly in SolidWorks" style="width:100%; display:block; padding:10px 14px 0;">
+      <p class="caption">Fig. 3 · Isometric view, SolidWorks</p>
+    </div>
+  </section>
+
   <section id="decisions">
-    <p class="eyebrow">04 · Engineering Decisions</p>
+    <p class="eyebrow">05 · Engineering Decisions</p>
     <h2>Design decisions</h2>
 
     <div class="calc-panel">
