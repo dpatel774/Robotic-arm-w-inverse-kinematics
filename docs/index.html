@@ -372,32 +372,39 @@
   <section id="mechanical">
     <p class="eyebrow">04 · Mechanical Design</p>
     <h2>CAD</h2>
-    <p class="body-text muted">Modeled in SolidWorks. The base rotates on the bottom servo, with the shoulder and elbow mounts built as single continuous bodies, keeping the joint stiff.</p>
+    <p class="body-text muted">Modeled in SolidWorks. The base rotates on the bottom servo, with the shoulder and elbow mounts built as single continuous bodies, keeping the joint stiff. Link lengths (10 cm / 12 cm, 2 to 22 cm reach) were set by a desk-scale reach requirement first, then checked against shoulder servo torque before the geometry was locked in.</p>
 
     <div class="diagram-wrap" style="margin-top:22px; max-width:480px;">
       <p class="figure-heading" style="padding:14px 14px 0;">Full Assembly</p>
       <img src="./cad-render.png" alt="CAD render of the 3-DOF robotic arm assembly in SolidWorks" style="width:100%; display:block; padding:10px 14px 0;">
       <p class="caption">Fig. 3 · Isometric view, SolidWorks</p>
     </div>
-  </section>
-
-  <section id="decisions">
-    <p class="eyebrow">05 · Engineering Decisions</p>
-    <h2>Design decisions</h2>
 
     <div class="calc-panel">
       <div class="calc-header">
-        <h3>Sizing the geometry: desk-scale reach + torque check</h3>
-        <p>Link lengths (10 cm / 12 cm, 2 to 22 cm reach) were set by a desk-scale reach requirement first, then checked against shoulder servo torque before the geometry was locked in CAD.</p>
+        <h3>Given the specs and desk-scale requirements, this geometry was chosen</h3>
+        <p>Worst case: fully extended, target payload plus forearm and elbow servo mass acting at the full 22 cm reach.</p>
       </div>
       <div class="calc-math mono">
         <div class="calc-row"><span>τ = m · g · r</span></div>
-        <div class="calc-row"><span class="calc-label">Worst case</span><span>fully extended, payload + forearm + elbow servo mass at 22 cm reach</span></div>
         <div class="calc-row"><span class="calc-label">m (est.)</span><span>≈ 0.18 kg</span></div>
         <div class="calc-row"><span class="calc-label">τ required</span><span>0.18 × 9.81 × 0.22 ≈ 0.39 N·m ≈ 4.0 kgf·cm</span></div>
         <div class="calc-row"><span class="calc-label">τ rated</span><span>MG995 stall torque ≈ 10 kgf·cm @ 4.8V</span></div>
         <div class="calc-row result"><span class="calc-label">Safety factor</span><span>≈ 2.5×</span></div>
       </div>
+    </div>
+  </section>
+
+  <section id="final">
+    <p class="eyebrow">05 · Final Product</p>
+    <h2>Final product</h2>
+    <p class="body-text muted">The finished arm, responding live to mouse and scroll input.</p>
+
+    <div class="diagram-wrap" style="margin-top:22px;">
+      <video controls playsinline style="width:100%; height:auto; display:block;">
+        <source src="./arm-demo.mp4" type="video/mp4">
+      </video>
+      <p class="caption">Fig. 4 · Physical arm, live control</p>
     </div>
   </section>
 
